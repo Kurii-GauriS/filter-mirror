@@ -2,49 +2,100 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090b12" />
     <title>Mirror — AR Face Paint Studio</title>
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-        background: #000;
-      }
-      .stage {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-      }
-      video, canvas {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transform: scaleX(-1); /* Mirrors the camera stream */
-      }
-    </style>
   </head>
   <body>
-    <div class="stage">
-      <video id="webcam" autoplay playsinline muted></video>
-      <canvas id="overlay"></canvas>
-      <canvas id="paintLayer" class="paint-layer"></canvas>
-      <div class="status" id="status">Loading camera…</div>
-      <div class="controls" id="controls">
-        <div class="swatch-group" aria-label="Paint colors">
-          <button class="color-swatch active" type="button" data-color="#ffffff" data-glitter="false" style="background:#ffffff" aria-label="White"></button>
-          <button class="color-swatch" type="button" data-color="#ff79c6" data-glitter="false" style="background:#ff79c6" aria-label="Pink"></button>
-          <button class="color-swatch" type="button" data-color="#00d1ff" data-glitter="false" style="background:#00d1ff" aria-label="Cyan"></button>
-          <button class="color-swatch" type="button" data-color="#7cff6b" data-glitter="false" style="background:#7cff6b" aria-label="Green"></button>
-          <button class="color-swatch" type="button" data-color="#ffd166" data-glitter="false" style="background:#ffd166" aria-label="Gold"></button>
-          <button class="color-swatch" type="button" data-color="#a78bfa" data-glitter="false" style="background:#a78bfa" aria-label="Purple"></button>
-          <button class="color-swatch" type="button" data-color="#ffffff" data-glitter="true" style="background:linear-gradient(135deg,#fff 0%,#d9f3ff 50%,#ffd7f3 100%)" aria-label="Glitter white"></button>
-        </div>
-        <button id="clearPaint" type="button">Clear paint</button>
-      </div>
-    </div>
+    <main class="studio">
+      <header class="studio-header">
+        <a class="brand" href="/" aria-label="Mirror home"><span class="brand-mark">M</span> Mirror</a>
+        <p>LIVE FACE PAINT STUDIO</p>
+        <div class="header-spacer"></div>
+      </header>
+
+      <section class="workspace" aria-label="Face paint workspace">
+        <section class="panel live-panel" aria-labelledby="live-heading">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">01 / TRACK</span>
+              <h1 id="live-heading">Live AR Preview</h1>
+            </div>
+            <span class="live-indicator"><i></i> LIVE</span>
+          </div>
+          <div class="preview-frame">
+            <video id="webcam" autoplay playsinline muted></video>
+            <canvas id="overlay" aria-label="Live face paint preview"></canvas>
+            <div id="status" class="status">Starting camera…</div>
+            <div class="preview-caption">Move your face to preview your design</div>
+          </div>
+        </section>
+
+        <section class="panel editor-panel" aria-labelledby="editor-heading">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">02 / CREATE</span>
+              <h2 id="editor-heading">UV Canvas Studio</h2>
+            </div>
+            <div class="canvas-actions">
+              <button id="undo-button" class="button button-muted" type="button" disabled>Undo</button>
+              <button id="clear-button" class="button button-muted" type="button">Clear</button>
+            </div>
+          </div>
+
+          <div class="canvas-wrap">
+            <canvas id="paint-canvas" width="512" height="512" aria-label="Interactive face paint UV canvas"></canvas>
+            <span class="canvas-hint">PAINT HERE</span>
+          </div>
+
+          <div class="brush-controls">
+            <div class="control-section">
+              <div class="control-title"><span>Colors</span><span class="control-note">PRESETS</span></div>
+              <div class="swatches" role="group" aria-label="Paint colors">
+                <button class="swatch active" type="button" data-color="#ffffff" style="--swatch:#ffffff" aria-label="White" title="White"></button>
+                <button class="swatch" type="button" data-color="#161821" style="--swatch:#161821" aria-label="Black" title="Black"></button>
+                <button class="swatch" type="button" data-color="#ff4d5e" style="--swatch:#ff4d5e" aria-label="Red" title="Red"></button>
+                <button class="swatch" type="button" data-color="#4ee58b" style="--swatch:#4ee58b" aria-label="Green" title="Green"></button>
+                <button class="swatch" type="button" data-color="#4c8dff" style="--swatch:#4c8dff" aria-label="Blue" title="Blue"></button>
+                <button class="swatch" type="button" data-color="#ff78bd" style="--swatch:#ff78bd" aria-label="Pink" title="Pink"></button>
+                <label class="custom-color" title="Choose custom color">
+                  <input id="custom-color" type="color" value="#ffffff" aria-label="Custom RGB color" />
+                  <span>+</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="control-section glitter-section">
+              <div class="control-title"><span>Glitter</span><span class="control-note">SPARKLE</span></div>
+              <div class="swatches" role="group" aria-label="Glitter paint">
+                <button class="glitter-swatch" type="button" data-color="#ffd166" data-glitter="gold" aria-label="Gold Glitter">
+                  <span class="glitter-chip gold"></span><span>Gold</span>
+                </button>
+                <button class="glitter-swatch" type="button" data-color="#d9e8ff" data-glitter="holo" aria-label="Holo Glitter">
+                  <span class="glitter-chip holo"></span><span>Holo</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="sliders">
+              <label class="slider-control" for="brush-size">
+                <span>Brush size <output id="brush-size-value">32</output></span>
+                <input id="brush-size" type="range" min="4" max="96" value="32" />
+              </label>
+              <label class="slider-control" for="brush-strength">
+                <span>Strength <output id="brush-strength-value">80%</output></span>
+                <input id="brush-strength" type="range" min="5" max="100" value="80" />
+              </label>
+              <label class="slider-control" for="brush-softness">
+                <span>Softness <output id="brush-softness-value">65%</output></span>
+                <input id="brush-softness" type="range" min="0" max="100" value="65" />
+              </label>
+            </div>
+          </div>
+        </section>
+      </section>
+      <footer class="studio-footer">Your design mirrors across the face in real time.</footer>
+    </main>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
