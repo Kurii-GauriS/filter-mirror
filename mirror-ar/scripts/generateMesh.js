@@ -83,10 +83,9 @@ export async function generateFaceMesh() {
   }
 
   const mesh = parseFaceMeshObj(await response.text());
-  const formatArray = (values) => values.join(', ');
   const generatedFile = `// Generated from Google's canonical_face_model.obj by scripts/generateMesh.js.\n` +
-    `export const FACE_MESH_UVS = new Float32Array([\n  ${formatArray(mesh.uvs)},\n]);\n` +
-    `export const FACE_MESH_INDICES = new Uint16Array([\n  ${formatArray(mesh.indices)},\n]);\n`;
+    `export const FACE_MESH_UVS = new Float32Array([\n  ${mesh.uvs.join(', ')},\n]);\n` +
+    `export const FACE_MESH_INDICES = new Uint16Array([\n  ${mesh.indices.join(', ')},\n]);\n`;
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(outputPath, generatedFile, 'utf8');

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "setup": "node scripts/setup.js",
+    "generate:mesh": "node scripts/generateMesh.js",
     "predev": "npm run setup",
     "dev": "vite",
     "prebuild": "npm run setup",
