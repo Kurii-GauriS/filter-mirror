@@ -321,7 +321,6 @@ function updateFaceMesh(landmarks) {
     positions[i * 3 + 2] = -landmark.z * 0.35;
   }
   geometry.attributes.position.needsUpdate = true;
-  geometry.computeVertexNormals();
   faceMesh.visible = true;
   status.textContent = 'Face tracked — paint on the UV canvas';
 }

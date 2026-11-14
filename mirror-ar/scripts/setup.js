@@ -13,14 +13,20 @@ const modelDir = path.join(rootDir, 'public', 'models');
 const modelDest = path.join(modelDir, 'face_landmarker.task');
 const modelUrl = 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
 
+async function exists(filePath) {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch (error) {
+    if (error.code === 'ENOENT') return false;
+    throw error;
+  }
+}
+
 async function setup() {
   console.log('Setting up Mirror AR assets...');
 
-  try {
-    await fs.access(path.join(rootDir, 'src', 'faceMeshData.js'));
-  } catch {
-    await generateFaceMesh();
-  }
+  if (!(await exists(path.join(rootDir, 'src', 'faceMeshData.js')))) await generateFaceMesh();
 
   try {
     const files = await fs.readdir(wasmSrc);
@@ -34,10 +40,9 @@ async function setup() {
   }
 
   await fs.mkdir(modelDir, { recursive: true });
-  try {
-    await fs.access(modelDest);
+  if (await exists(modelDest)) {
     console.log('Face landmarker model already exists.');
-  } catch {
+  } else {
     console.log('Downloading face_landmarker.task...');
     const response = await fetch(modelUrl);
     if (!response.ok || !response.body) {
