@@ -158,15 +158,19 @@ h1, h2 {
 #webcam {
   object-fit: cover;
   transform: scaleX(-1);
+  z-index: 0;
 }
 
-#overlay { pointer-events: none; }
+#overlay {
+  z-index: 1;
+  pointer-events: none;
+}
 
 .status {
   position: absolute;
   left: 13px;
   bottom: 13px;
-  z-index: 1;
+  z-index: 2;
   padding: 8px 11px;
   border: 1px solid rgba(255,255,255,.13);
   border-radius: 999px;

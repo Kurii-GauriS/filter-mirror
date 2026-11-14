@@ -66,6 +66,8 @@ const faceMaterial = new THREE.MeshBasicMaterial({
 });
 const faceMesh = new THREE.Mesh(geometry, faceMaterial);
 faceMesh.visible = false;
+faceMesh.frustumCulled = false;
+faceMesh.renderOrder = 1;
 scene.add(faceMesh);
 
 function updateUndoButton() {
