@@ -32,7 +32,16 @@
       <canvas id="overlay"></canvas>
       <canvas id="paintLayer" class="paint-layer"></canvas>
       <div class="status" id="status">Loading camera…</div>
-      <div class="controls">
+      <div class="controls" id="controls">
+        <div class="swatch-group" aria-label="Paint colors">
+          <button class="color-swatch active" type="button" data-color="#ffffff" data-glitter="false" style="background:#ffffff" aria-label="White"></button>
+          <button class="color-swatch" type="button" data-color="#ff79c6" data-glitter="false" style="background:#ff79c6" aria-label="Pink"></button>
+          <button class="color-swatch" type="button" data-color="#00d1ff" data-glitter="false" style="background:#00d1ff" aria-label="Cyan"></button>
+          <button class="color-swatch" type="button" data-color="#7cff6b" data-glitter="false" style="background:#7cff6b" aria-label="Green"></button>
+          <button class="color-swatch" type="button" data-color="#ffd166" data-glitter="false" style="background:#ffd166" aria-label="Gold"></button>
+          <button class="color-swatch" type="button" data-color="#a78bfa" data-glitter="false" style="background:#a78bfa" aria-label="Purple"></button>
+          <button class="color-swatch" type="button" data-color="#ffffff" data-glitter="true" style="background:linear-gradient(135deg,#fff 0%,#d9f3ff 50%,#ffd7f3 100%)" aria-label="Glitter white"></button>
+        </div>
         <button id="clearPaint" type="button">Clear paint</button>
       </div>
     </div>

@@ -23,9 +23,9 @@ scene.add(faceGroup);
 const faceMask = new THREE.Mesh(
   createFaceMaskGeometry(),
   new THREE.MeshBasicMaterial({
-    color: 0xff4f86,
+  color: 0xffffff,
     transparent: true,
-    opacity: 0.78,
+  opacity: 0.28,
     side: THREE.DoubleSide,
     blending: THREE.AdditiveBlending,
   }),
@@ -47,11 +47,14 @@ glow.visible = false;
 faceGroup.add(glow);
 
 const paintCtx = paintCanvas.getContext('2d');
+const colorButtons = [...document.querySelectorAll('.color-swatch')];
 let landmarker = null;
 let lastFrameTime = -1;
 let activeFace = { x: 0, y: 0, width: 0, height: 0, rotation: 0, visible: false };
 let brushActive = false;
 let lastPointer = { x: 0, y: 0 };
+let currentPaintColor = '#ffffff';
+let currentPaintGlitter = false;
 
 function resizeRenderer() {
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -96,14 +99,33 @@ function drawStroke(x, y) {
   paintCtx.beginPath();
   paintCtx.moveTo(lastPointer.x, lastPointer.y);
   paintCtx.lineTo(x, y);
-  paintCtx.strokeStyle = '#ff76c1';
-  paintCtx.lineWidth = 16;
+  paintCtx.strokeStyle = currentPaintColor;
+  paintCtx.lineWidth = currentPaintGlitter ? 12 : 16;
   paintCtx.lineCap = 'round';
   paintCtx.lineJoin = 'round';
-  paintCtx.shadowColor = 'rgba(255, 118, 193, 0.9)';
-  paintCtx.shadowBlur = 14;
+
+  if (currentPaintGlitter) {
+    paintCtx.shadowColor = 'rgba(255, 255, 255, 0.95)';
+    paintCtx.shadowBlur = 18;
+  } else {
+    paintCtx.shadowColor = 'rgba(255, 255, 255, 0.45)';
+    paintCtx.shadowBlur = 10;
+  }
+
   paintCtx.stroke();
   paintCtx.shadowBlur = 0;
+
+  if (currentPaintGlitter) {
+    const sparkleCount = 4;
+    for (let i = 0; i < sparkleCount; i += 1) {
+      const offsetX = (Math.random() - 0.5) * 18;
+      const offsetY = (Math.random() - 0.5) * 18;
+      paintCtx.beginPath();
+      paintCtx.fillStyle = 'rgba(255,255,255,0.9)';
+      paintCtx.arc(x + offsetX, y + offsetY, 1.8 + Math.random() * 2.4, 0, Math.PI * 2);
+      paintCtx.fill();
+    }
+  }
 }
 
 function handlePointerDown(event) {
@@ -141,6 +163,14 @@ paintCanvas.addEventListener('pointercancel', handlePointerUp);
 
 clearButton.addEventListener('click', () => {
   paintCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+});
+
+colorButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    colorButtons.forEach((swatch) => swatch.classList.toggle('active', swatch === button));
+    currentPaintColor = button.dataset.color;
+    currentPaintGlitter = button.dataset.glitter === 'true';
+  });
 });
 
 window.addEventListener('resize', resizeRenderer);
