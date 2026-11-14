@@ -4,9 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "setup": "node scripts/setup.js",
+    "predev": "npm run setup",
     "dev": "vite",
+    "prebuild": "npm run setup",
     "build": "vite build",
     "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.14",
+    "three": "^0.160.0"
   },
   "devDependencies": {
     "vite": "^8.3.6"

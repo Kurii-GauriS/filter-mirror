@@ -4,10 +4,33 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mirror-ar</title>
+    <title>Mirror — AR Face Paint Studio</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+      .stage {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+      }
+      video, canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1); /* Mirrors the camera stream */
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div class="stage">
+      <video id="webcam" autoplay playsinline></video>
+      <canvas id="overlay"></canvas>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
