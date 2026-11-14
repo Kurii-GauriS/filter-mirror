@@ -30,7 +30,11 @@
     <div class="stage">
       <video id="webcam" autoplay playsinline muted></video>
       <canvas id="overlay"></canvas>
+      <canvas id="paintLayer" class="paint-layer"></canvas>
       <div class="status" id="status">Loading camera…</div>
+      <div class="controls">
+        <button id="clearPaint" type="button">Clear paint</button>
+      </div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
